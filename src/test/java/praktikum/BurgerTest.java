@@ -80,8 +80,13 @@ public class BurgerTest {
 
     @Test
     public void getReceiptTest() {
+        // Создаём мок для объекта Bun
+        Bun mockBun = Mockito.mock(Bun.class);
+        Mockito.doReturn("bun1").when(mockBun).getName();
+        Mockito.doReturn(5.0f).when(mockBun).getPrice();
+
         Burger burger = new Burger();
-        burger.setBuns(new Bun("bun1", 5.0f));
+        burger.setBuns(mockBun); // Используем мок вместо реального объекта
         Ingredient i1 = new Ingredient(IngredientType.SAUCE, "test1", 10.0f);
         Ingredient i2 = new Ingredient(IngredientType.FILLING, "test2", 15.0f);
         Ingredient i3 = new Ingredient(IngredientType.SAUCE, "test3", 20.0f);
@@ -89,6 +94,7 @@ public class BurgerTest {
         burger.addIngredient(i2);
         burger.addIngredient(i3);
 
+        // Ожидаемая строка квитанции
         StringJoiner joiner = new StringJoiner(System.lineSeparator());
         joiner.add("(==== bun1 ====)")
                 .add("= sauce test1 =")
@@ -98,8 +104,9 @@ public class BurgerTest {
                 .add("")
                 .add("Price: 55,000000")
                 .add("");
-        assertEquals(joiner.toString(), burger.getReceipt());
 
+        // Проверяем, что результат соответствует ожиданию
+        assertEquals(joiner.toString(), burger.getReceipt());
     }
 
     @Parameterized.Parameters
